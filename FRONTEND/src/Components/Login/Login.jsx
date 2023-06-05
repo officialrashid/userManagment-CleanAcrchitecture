@@ -6,13 +6,31 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Divider from '@mui/material/Divider';
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoginEmail, setLoginPassword } from '../../redux-toolkit/loginReducers';
+import { useNavigate } from 'react-router-dom';
+import axios from "../../axios/axios";
 
 
 export default function Login() {
+  const body = useSelector((state) => state.login);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    console.log("login handle called");
+    axios.post("/api/v1/user/login", body).then((response) => {
+        console.log(response.data,"9999999999");
+        if(response.data==true){
+            navigate('/home')
+        }else{
+            navigate('/login')
+        }
+      
+      
+    });
+  };
     return (
         <Container component="main" maxWidth="md"   >
             <Box
@@ -42,7 +60,7 @@ export default function Login() {
                 </Typography>
                
                 <Divider >Or Continue with</Divider>
-                <Box component="form" sx={{ paddingLeft: 20 }}>
+                <Box component="form" sx={{ paddingLeft: 20 }} onSubmit={handleLoginSubmit}>
                     <TextField
                         margin="normal"
                         required
@@ -52,8 +70,9 @@ export default function Login() {
                         name="email"
                         autoComplete="email"
                         autoFocus
-                       
+                        
                         sx={{ width: "70%" }}
+                        onChange={(e) => dispatch(setLoginEmail(e.target.value))}
                     />
 
                     <TextField
@@ -67,6 +86,7 @@ export default function Login() {
                         autoComplete="current-password"
                      
                         sx={{ width: "70%" }}
+                        onChange={(e) => dispatch(setLoginPassword(e.target.value)) }
                     />
 
                     <Button type="submit" fullWidth variant="contained" sx={{ mt: 5, mb: 2, height: 60, width: "70%", backgroundColor: '#131392' }}  >

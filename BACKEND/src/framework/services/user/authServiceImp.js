@@ -10,9 +10,11 @@ const userServiceImp = () => {
        console.log(hashPassword, "hashpassword is coming");
        return hashPassword;
     };
- 
+    const ComparePassword = async (password, userPassword) => bcrypt.compare(password,userPassword);
+   
     return {
        bycriptPassword,
+       ComparePassword,
     };
  };
  export default userServiceImp

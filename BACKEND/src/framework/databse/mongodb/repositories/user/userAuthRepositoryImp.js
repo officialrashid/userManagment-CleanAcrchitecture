@@ -15,9 +15,10 @@ const userAuthRepositoryImp=()=>{
         })
       return users.save()
     }
+   
     return{
         userExist,
         createUser
     }
 }
-export default userAuthRepositoryImp
+export default userAuthRepositoryImp;

@@ -11,6 +11,7 @@ const authRouter=(express) =>{
    const controller=authController(userAuthRepositoryInt,userAuthRepositoryImp,userSeriviceInt,userServiceImp)
     
    router.route('/signup').post(controller.createuser)
+   router.route('/login').post(controller.loginUser)
     return router;
 }
 export default authRouter

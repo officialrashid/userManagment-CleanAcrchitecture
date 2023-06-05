@@ -11,7 +11,13 @@ const register = async (name, email, phone, password, repositories, authService)
          console.log(userDetails,"usedetails is comng");
          const createUser = await repositories.createUser(userDetails)
          console.log(createUser)
+         return{
+            createUser
+         }
+      }else{
+         return {message:'email already exists'}
       }
+     
    })
 }
 export default register

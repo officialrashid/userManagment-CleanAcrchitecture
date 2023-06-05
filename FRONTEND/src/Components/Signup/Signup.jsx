@@ -8,22 +8,29 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import axios from '../../axios/axios'
-import {useDispatch,useSelector} from 'react-redux'
-import { setName, setEmail, setPhone, setPassword, setConfirmPassword } from '../../redux-toolkit/registerReducers';
-import { Form } from "react-router-dom";
+import axios from "../../axios/axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setName,
+  setEmail,
+  setPhone,
+  setPassword,
+  setConfirmPassword,
+} from "../../redux-toolkit/registerReducers";
+import { useNavigate } from "react-router-dom";
 export default function Signup() {
-  const dispatch = useDispatch()
-  const body = useSelector(
-    (state) => state.register
-  );
-console.log(body.name,";;;;;;;;;;;;;;",body,"body coming");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const body = useSelector((state) => state.register);
+  console.log(body.name, ";;;;;;;;;;;;;;", body, "body coming");
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("handleSubmit called"); // Add this line
-    axios.post('/api/v1/user/signup',body).then((response)=>{
+    axios.post("/api/v1/user/signup", body).then((response) => {
+      console.log(response, "response in frontend");
 
-    })
+      navigate("/home");
+    });
   };
   return (
     <div>
@@ -34,7 +41,6 @@ console.log(body.name,";;;;;;;;;;;;;;",body,"body coming");
             flexDirection: "column",
             alignItems: "center",
             marginLeft: 10,
-            
           }}
         >
           <Box
@@ -79,8 +85,13 @@ console.log(body.name,";;;;;;;;;;;;;;",body,"body coming");
             Start for free Today
           </Typography>
           <Divider sx={{ marginRight: 10 }}>Or Continue with</Divider>
-         
-          <Box component="form" noValidate sx={{ paddingLeft: 20 }} onSubmit={handleSubmit} >
+
+          <Box
+            component="form"
+            noValidate
+            sx={{ paddingLeft: 20 }}
+            onSubmit={handleSubmit}
+          >
             <TextField
               margin="normal"
               required
@@ -143,22 +154,31 @@ console.log(body.name,";;;;;;;;;;;;;;",body,"body coming");
               onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
             />
             <Stack direction="row" spacing={2}>
-              <Button type='submit' variant="contained" fullWidth  sx={{ mt: 5, mb: 2, height: 60, width: "60%", backgroundColor: '#131392' }}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{
+                  mt: 5,
+                  mb: 2,
+                  height: 60,
+                  width: "60%",
+                  backgroundColor: "#131392",
+                }}
+              >
                 Submit&Register
               </Button>
-              
             </Stack>
-            <Grid container justifyContent="space-around" sx={{marginLeft:-18}} >
-              <Link
-                href="#"
-                variant="body2"
-                
-                >
+            <Grid
+              container
+              justifyContent="space-around"
+              sx={{ marginLeft: -18 }}
+            >
+              <Link href="#" variant="body2">
                 {"Don't have an account? Sign In"}
               </Link>
             </Grid>
           </Box>
-          
         </Box>
         <Box
           component="img"
