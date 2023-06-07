@@ -8,146 +8,108 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
+import {useDispatch,useSelector} from 'react-redux'
+import {adminSetEmail,adminSetPassword} from '../../redux-toolkit/adminRegisterReducer'
+import axios from "../../axios/axios"
+import { useNavigate } from "react-router-dom";
 export default function AdminRegister() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const body = useSelector((state) => state.adminRegister)
+  const handleAdminRegister = (e) => {
+    e.preventDefault();
+    console.log("admin handle calling");
+    // Rest of your code
+    axios.post("/api/v1/admin/adminSignup", body).then((response)=>{
+         
+        navigate('/adminHome')
+    })
+  };
   return (
     <div>
-      <Container component="main" maxWidth="md">
-        <Box
-          sx={{
+       <Container component="main" maxWidth="md"   >
+    <Box
+        sx={{
+            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            marginLeft: 10,
-            
-          }}
-        >
-          <Box
+        }}
+    >
+        <Box
             component="img"
             sx={{
-              height: 233,
-              width: 350,
-              marginLeft: 80,
-              maxHeight: { xs: 233, md: 167 },
-              maxWidth: { xs: 350, md: 250 },
+                height: 233,
+                width: 350, marginLeft: 80,
+                maxHeight: { xs: 233, md: 167 },
+                maxWidth: { xs: 350, md: 250 },
             }}
             alt=""
             src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-4.svg"
-          />
-          <Typography
-            variant="h1"
-            component="h5"
-            sx={{
-              fontSize: 16,
-              fontWeight: 500,
-              color: "blue",
-              alignItems: "center",
-              textAlign: "center",
-              marginRight: 10,
-            }}
-          >
+        />
+        <Typography component="h1" variant="h5" sx={{ fontSize: 12, fontWeight: 500, color: "blue", marginBottom: 4 }}>
+            Welcome back!
+        </Typography>
+        <Typography component="h1" variant="h5" sx={{ fontSize: 24, fontWeight: 1000 }}>
             Admin Register
-          </Typography>
-
-          <Typography
-            variant="h1"
-            component="h"
-            sx={{
-              fontSize: 30,
-              fontWeight: 400,
-              color: "#05264e",
-              alignItems: "center",
-              marginTop: 2,
-              marginRight: 10,
-            }}
-          >
-          You have a nice day
-          </Typography>
-          <Divider sx={{ marginRight: 10 }}>Or Continue with</Divider>
-          <Box component="form" sx={{ paddingLeft: 20 }}>
+        </Typography>
+       
+        <Divider >Or Continue with</Divider>
+        <Box component="form" sx={{ paddingLeft: 20 }} onSubmit={handleAdminRegister}>
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
-              autoFocus
-              sx={{ width: "60%" }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              sx={{ width: "60%" }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="phone"
-              label="phone"
-              name="phone"
-              autoComplete="phone"
-              autoFocus
-              sx={{ width: "60%" }}
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+               onChange={(e) => dispatch(adminSetEmail(e.target.value))}
+                sx={{ width: "70%" }}
             />
 
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              sx={{ width: "60%" }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="confirmPassword"
-              label="confirmPassword"
-              type="confirmPassword"
-              id="confirmPassword"
-              autoComplete="current-password"
-              sx={{ width: "60%" }}
-            />
-            <Stack direction="row" spacing={2}>
-              <Button variant="contained" fullWidth  sx={{ mt: 5, mb: 2, height: 60, width: "60%", backgroundColor: '#131392' }}>
-                Submit&Register
-              </Button>
-            </Stack>
-            <Grid container justifyContent="space-around" sx={{marginLeft:-18}} >
-              <Link
-                href="#"
-                variant="body2"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
                 
-                >
-                {"Don't have an account? Sign In"}
-              </Link>
+                sx={{ width: "70%" }}
+                onChange={(e) => dispatch(adminSetPassword(e.target.value))}
+            />
+
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 5, mb: 2, height: 60, width: "70%", backgroundColor: '#131392' }}  >
+                Register
+            </Button>
+            <Grid container justifyContent="space-around"
+                alignItems="center">
+
+                <Link href="" variant="body2" sx={{marginLeft:-18}} onClick={()=>navigate('/adminLogin')} >
+                    {"Don't have an account? Sign Up"}
+                </Link>
+
             </Grid>
-          </Box>
         </Box>
-        <Box
-          component="img"
-          sx={{
+    </Box>
+    <Box
+        component="img"
+        sx={{
             height: 250,
             width: 350,
             maxHeight: { xs: 250, md: 167 },
             maxWidth: { xs: 350, md: 250 },
-          }}
-          alt=""
-          src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-3.svg"
-        />
-      </Container>
+        }}
+        alt=""
+        src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-3.svg"
+    />
+ 
+
+</Container>
     </div>
   );
 }

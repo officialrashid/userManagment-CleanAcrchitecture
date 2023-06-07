@@ -174,7 +174,7 @@ export default function Signup() {
               justifyContent="space-around"
               sx={{ marginLeft: -18 }}
             >
-              <Link href="#" variant="body2">
+              <Link  variant="body2" onClick={()=> navigate('/login')}>
                 {"Don't have an account? Sign In"}
               </Link>
             </Grid>

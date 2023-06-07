@@ -7,7 +7,26 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Divider from '@mui/material/Divider';
+import {useDispatch,useSelector} from 'react-redux'
+import { setLoginEmail, setLoginPassword } from '../../redux-toolkit/adminLoginReducer';
+import axios from "../../axios/axios"
+import { useNavigate } from "react-router-dom";
 function AdminLogin() {
+    const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const body = useSelector((state) => state.adminLogin)
+  const handleAdminLogin = (e) =>{
+    console.log("handle admin login caled",body,"admin body coming");
+    e.preventDefault();
+    axios.post('/api/v1/admin/adminLogin',body).then((response)=>{
+           
+        if(response.data==true){
+            navigate('/adminHome')
+        }else{
+            navigate('/adminLogin')
+        }
+    })
+  }
   return (
     <Container component="main" maxWidth="md"   >
     <Box
@@ -37,7 +56,7 @@ function AdminLogin() {
         </Typography>
        
         <Divider >Or Continue with</Divider>
-        <Box component="form" sx={{ paddingLeft: 20 }}>
+        <Box component="form" sx={{ paddingLeft: 20 }} onSubmit={handleAdminLogin} >
             <TextField
                 margin="normal"
                 required
@@ -49,6 +68,7 @@ function AdminLogin() {
                 autoFocus
                
                 sx={{ width: "70%" }}
+                onChange={(e) => dispatch(setLoginEmail(e.target.value))}
             />
 
             <TextField
@@ -62,6 +82,7 @@ function AdminLogin() {
                 autoComplete="current-password"
              
                 sx={{ width: "70%" }}
+                onChange={(e) => dispatch(setLoginPassword(e.target.value))}
             />
 
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 5, mb: 2, height: 60, width: "70%", backgroundColor: '#131392' }}  >
@@ -70,7 +91,7 @@ function AdminLogin() {
             <Grid container justifyContent="space-around"
                 alignItems="center">
 
-                <Link href="#" variant="body2" sx={{marginLeft:-18}} >
+                <Link href="" variant="body2" sx={{marginLeft:-18}} onClick={()=>navigate('/admin')} >
                     {"Don't have an account? Sign Up"}
                 </Link>
 
