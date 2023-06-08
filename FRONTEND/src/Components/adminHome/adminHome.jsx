@@ -12,6 +12,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "../../axios/axios";
+import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux'
+import {setEditUser} from '../../redux-toolkit/adminEditUserReducer';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,8 +36,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function AdminHome() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [users, setUsers] = useState([]);
-
+ 
   useEffect(() => {
     axios.get('/api/v1/admin/userList')
       .then(response => {
@@ -79,7 +84,11 @@ function AdminHome() {
                 <StyledTableCell align="right">{user.email}</StyledTableCell>
                 <StyledTableCell align="right">{user.phone}</StyledTableCell>
                 <StyledTableCell align="right">
-                  <Button variant="contained" size="small">
+                  <Button variant="contained" size="small"onClick={()=>  {
+                     dispatch(setEditUser(user))
+                     console.log(user,"user444$$");
+                    navigate('/adminEditUser')} 
+                  } >
                     <FontAwesomeIcon icon={faPenToSquare} className="icon" style={{ marginRight: "10px" }} />
                     Edit
                   </Button>
@@ -95,7 +104,7 @@ function AdminHome() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button variant="contained" disableElevation sx={{ marginLeft: 4, width: 1200, marginTop: 2, backgroundColor: "" }}>
+      <Button variant="contained" disableElevation sx={{ marginLeft: 4, width: 1200, marginTop: 2, backgroundColor: "" }} onClick={()=>navigate('/adminAddUser')}>
         ADD USER
       </Button>
     </div>

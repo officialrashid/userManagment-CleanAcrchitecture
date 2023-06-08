@@ -13,6 +13,8 @@ const authRouterAdmin =(express)=>{
     router.route('/adminLogin').post(controller.adminLogin)
     router.route('/userList').get(controller.userList)
     router.route('/deleteUser').delete(controller.deleteUser)
+    router.route('/adminEditUser').put(controller.adminEditUser)
+    router.route('/adminAddUser').post(controller.adminAddUser)
     return router;
 }
 export default authRouterAdmin

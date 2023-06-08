@@ -3,6 +3,8 @@ import adminRegister from "../../../application/useCase/admin/adminRegister.js"
 import adminSignIn from "../../../application/useCase/admin/adminLogin.js"
 import getAllUsers from "../../../application/useCase/admin/userList.js"
 import deleteOneUser from "../../../application/useCase/admin/deleteUser.js"
+import updateUserDetails from "../../../application/useCase/admin/editUser.js"
+import adminAddUsers from "../../../application/useCase/admin/adminAddUser.js"
 const authController = (adminAuthRepositoryInt,adminAuthRepositoryImp,adminSeriviceInt,adminServiceImp) =>{
 
     const dbRepository = adminAuthRepositoryInt(adminAuthRepositoryImp())
@@ -55,11 +57,34 @@ const authController = (adminAuthRepositoryInt,adminAuthRepositoryImp,adminSeriv
             console.log(error);
         })
       }
+      const adminEditUser = (req,res) =>{
+         
+        console.log(req.body,"'''''''");
+        const {_id,name,email,phone} = req.body
+        updateUserDetails(_id,name,email,phone,dbRepository,authService).then((response)=>{
+            res.json(response)
+        }).catch(()=>{
+
+        })
+      }
+      const adminAddUser = (req,res) =>{
+
+        const {name,email,phone,password} = req.body
+
+        adminAddUsers(name,email,phone,password,dbRepository,authService).then((response)=>{
+            
+          res.json(response)
+        }).catch((error)=>{
+          console.log(error);
+        })
+      }
     return{
         createadmin,
         adminLogin,
         userList,
-        deleteUser
+        deleteUser,
+        adminEditUser,
+        adminAddUser
     }
 }
 export default authController

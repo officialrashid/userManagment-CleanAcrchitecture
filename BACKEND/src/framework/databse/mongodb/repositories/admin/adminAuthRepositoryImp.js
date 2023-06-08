@@ -29,12 +29,45 @@ const adminAuthRepositoryImp =()=>{
       throw new Error(error.message);
     }
   };
+  const updateUserDetails = async (userId, name, email, phone) => {
+    try {
+      const updateObj = {};
+      if (name) updateObj.name = name;
+      if (email) updateObj.email = email;
+      if (phone) updateObj.phone = phone;
   
+      const updatedUser = await UserData.findByIdAndUpdate(
+        userId,
+        updateObj,
+        { new: true }
+      );
+  
+      console.log("Updated user:", updatedUser);
+      return updatedUser;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+  const userExist =(email) =>UserData.findOne({email:email})
+  const adminCreateUser =async(user) => {
+    console.log(user,"imp");
+    
+    const users = await new UserData({
+        name:user?.getname(),
+        email:user?.getemail(),
+        phone:user?.getphone(),
+        password:user?.getpassword()
+    })
+  return users.save()
+}
    return{
     adminExist,
     createAdmin,
     getAllUserList,
-    deleteOneUser
+    deleteOneUser,
+    updateUserDetails,
+    userExist,
+    adminCreateUser,
    }
 }
 export default adminAuthRepositoryImp;

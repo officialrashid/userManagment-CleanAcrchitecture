@@ -8,7 +8,24 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
+import {useDispatch,useSelector} from 'react-redux'
+import {adminAddUserName,adminAddUserEmail,adminAddUserPhone,
+  adminAddUserPassword,adminAddUserConfirmPassword} from '../../redux-toolkit/adminAddUserReducer'
+  import axios from "../../axios/axios";
+  import {useNavigate} from 'react-router-dom'
 function adminAddUser() {
+  const navigate = useNavigate()
+  const body = useSelector((state) => state.adminAddUser)
+  const dispatch = useDispatch()
+ const handleAdminAddUser = (e) =>{
+     
+  e.preventDefault()
+  console.log('admin add user calling');
+     axios.post('/api/v1/admin/adminAddUser',body).then((responsse)=>{
+         
+        navigate('/adminHome')
+     })
+ }
   return (
     <div>
          <Container component="main" maxWidth="md">
@@ -63,7 +80,7 @@ function adminAddUser() {
             ADD USER
           </Typography>
           <Divider sx={{ marginRight: 10 }}>Or Continue with</Divider>
-          <Box component="form" sx={{ paddingLeft: 20 }}>
+          <Box component="form" sx={{ paddingLeft: 20 }} onSubmit={handleAdminAddUser}>
             <TextField
               margin="normal"
               required
@@ -74,6 +91,7 @@ function adminAddUser() {
               autoComplete="name"
               autoFocus
               sx={{ width: "60%" }}
+              onChange={(e)=>dispatch(adminAddUserName(e.target.value))}
             />
             <TextField
               margin="normal"
@@ -85,6 +103,7 @@ function adminAddUser() {
               autoComplete="email"
               autoFocus
               sx={{ width: "60%" }}
+              onChange={(e)=>dispatch(adminAddUserEmail(e.target.value))}
             />
             <TextField
               margin="normal"
@@ -96,6 +115,7 @@ function adminAddUser() {
               autoComplete="phone"
               autoFocus
               sx={{ width: "60%" }}
+              onChange={(e) => dispatch(adminAddUserPhone(e.target.value))}
             />
 
             <TextField
@@ -108,6 +128,7 @@ function adminAddUser() {
               id="password"
               autoComplete="current-password"
               sx={{ width: "60%" }}
+              onChange={(e) => dispatch(adminAddUserPassword(e.target.value))}
             />
             <TextField
               margin="normal"
@@ -119,9 +140,10 @@ function adminAddUser() {
               id="confirmPassword"
               autoComplete="current-password"
               sx={{ width: "60%" }}
+              onChange={(e)=>dispatch(adminAddUserConfirmPassword(e.target.value))}
             />
             <Stack direction="row" spacing={2}>
-              <Button variant="contained" fullWidth  sx={{ mt: 5, mb: 2, height: 60, width: "60%", backgroundColor: '#131392' }}>
+              <Button type="submit" variant="contained" fullWidth  sx={{ mt: 5, mb: 2, height: 60, width: "60%", backgroundColor: '#131392' }}>
                 Add User
               </Button>
             </Stack>

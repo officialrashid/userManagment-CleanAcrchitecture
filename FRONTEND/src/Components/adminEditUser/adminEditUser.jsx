@@ -8,9 +8,29 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-
+import { useSelector,useDispatch } from "react-redux";
+import { setEditName,setEditEmail, setEditPhone } from "../../redux-toolkit/adminEditSubmitReducer";
+import {useNavigate} from 'react-router-dom'
+import axios from "../../axios/axios"
 function adminEditUser() {
- 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const body = useSelector((state) => state.adminEditUser);
+  const userId = body.editUser._id
+  let editBody = useSelector((state) => state.adminEditSubmit)
+  console.log(userId, "edit user bodyyyyyyyy",editBody,"llllllll");
+  const handleEditSubmit = (e) =>{
+    const updatedUser = {
+      _id: userId,
+      ...editBody,
+    };
+    console.log(updatedUser,"onnippichuu");
+     console.log("handle edit calling now");
+   e.preventDefault()
+    axios.put('/api/v1/admin/adminEditUser',updatedUser).then((response)=>{
+         navigate('/adminHome')
+    })
+  }
   return (
     <div>
       <Container component="main" maxWidth="md">
@@ -20,7 +40,6 @@ function adminEditUser() {
             flexDirection: "column",
             alignItems: "center",
             marginLeft: 10,
-            
           }}
         >
           <Box
@@ -64,8 +83,8 @@ function adminEditUser() {
           >
             Edit User
           </Typography>
-         
-          <Box component="form" sx={{ paddingLeft: 20 }}>
+
+          <Box component="form" sx={{ paddingLeft: 20 }} onSubmit={handleEditSubmit}>
             <TextField
               margin="normal"
               required
@@ -74,8 +93,10 @@ function adminEditUser() {
               label="Name"
               name="name"
               autoComplete="name"
+              defaultValue={body.editUser.name}
               autoFocus
               sx={{ width: "60%" }}
+              onChange={(e) => dispatch(setEditName(e.target.value))}
             />
             <TextField
               margin="normal"
@@ -85,8 +106,10 @@ function adminEditUser() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              defaultValue={body.editUser.email}
               autoFocus
               sx={{ width: "60%" }}
+              onChange={(e) => dispatch(setEditEmail(e.target.value))}
             />
             <TextField
               margin="normal"
@@ -96,38 +119,42 @@ function adminEditUser() {
               label="phone"
               name="phone"
               autoComplete="phone"
+              defaultValue={body.editUser.phone}
               autoFocus
               sx={{ width: "60%" }}
+              onChange={(e)=>dispatch(setEditPhone(e.target.value))}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="id"
+              label="id"
+              name="id"
+              autoComplete="id"
+              defaultValue={body.editUser._id}
+              autoFocus
+              sx={{ width: "60%" }}
+            
             />
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              sx={{ width: "60%" }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="confirmPassword"
-              label="confirmPassword"
-              type="confirmPassword"
-              id="confirmPassword"
-              autoComplete="current-password"
-              sx={{ width: "60%" }}
-            />
             <Stack direction="row" spacing={2}>
-              <Button variant="contained" fullWidth  sx={{ mt: 5, mb: 2, height: 60, width: "60%", backgroundColor: '#131392' }}>
+              <Button
+                variant="contained"
+                fullWidth
+                type="submit"
+                sx={{
+                  mt: 5,
+                  mb: 2,
+                  height: 60,
+                  width: "60%",
+                  backgroundColor: "#131392",
+                  
+                }}
+              >
                 Edit User
               </Button>
             </Stack>
-         
           </Box>
         </Box>
         <Box
@@ -146,6 +173,4 @@ function adminEditUser() {
   );
 }
 
-
-
-export default adminEditUser
+export default adminEditUser;
