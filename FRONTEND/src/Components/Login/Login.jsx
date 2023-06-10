@@ -11,7 +11,8 @@ import { setLoginEmail, setLoginPassword } from "../../redux-toolkit/loginReduce
 import { useNavigate } from "react-router-dom";
 import axios from "../../axios/axios";
 import React, { useState } from "react";
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,8 +28,10 @@ export default function Login() {
       axios.post("/api/v1/user/login", body).then((response) => {
         console.log(response.data, "9999999999");
         if (response.data == true) {
+            toast.success('Login successful!');
           navigate("/home");
         } else {
+            toast.error('Incorrect Email or password check it!');
           navigate("/login");
         }
       });

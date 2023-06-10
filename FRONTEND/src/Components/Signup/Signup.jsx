@@ -10,6 +10,8 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import axios from "../../axios/axios";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
   setName,
@@ -38,6 +40,7 @@ export default function Signup() {
           localStorage.setItem('userRefreshToken', response?.data?.refreshToken)
           dispatch(isUser(response?.data?.accessToken))
           dispatch(addUserInfo(response?.data?.userInfo))
+          toast.success('Registration successful!');
           navigate("/home");
         }
         

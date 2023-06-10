@@ -1,36 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import { useSelector,useDispatch } from "react-redux";
-import { setEditName,setEditEmail, setEditPhone } from "../../redux-toolkit/adminEditSubmitReducer";
-import {useNavigate} from 'react-router-dom'
-import axios from "../../axios/axios"
+import { useSelector, useDispatch } from "react-redux";
+import { setEditName, setEditEmail, setEditPhone } from "../../redux-toolkit/adminEditSubmitReducer";
+import { useNavigate } from 'react-router-dom';
+import axios from "../../axios/axios";
+
 function adminEditUser() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const body = useSelector((state) => state.adminEditUser);
-  const userId = body.editUser._id
-  let editBody = useSelector((state) => state.adminEditSubmit)
-  console.log(userId, "edit user bodyyyyyyyy",editBody,"llllllll");
-  const handleEditSubmit = (e) =>{
-    const updatedUser = {
-      _id: userId,
-      ...editBody,
-    };
-    console.log(updatedUser,"onnippichuu");
-     console.log("handle edit calling now");
-   e.preventDefault()
-    axios.put('/api/v1/admin/adminEditUser',updatedUser).then((response)=>{
-         navigate('/adminHome')
-    })
-  }
+  const userId = body.editUser._id;
+  let editBody = useSelector((state) => state.adminEditSubmit);
+
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+   
+      const updatedUser = {
+        _id: userId,
+        ...editBody,
+      };
+
+      axios.put('/api/v1/admin/adminEditUser', updatedUser).then((response) => {
+        
+          navigate('/adminHome');
+        
+      
+      });
+    
+  };
+
+
+  
   return (
     <div>
       <Container component="main" maxWidth="md">
@@ -97,6 +103,8 @@ function adminEditUser() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(setEditName(e.target.value))}
+            
+              
             />
             <TextField
               margin="normal"
@@ -110,6 +118,7 @@ function adminEditUser() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(setEditEmail(e.target.value))}
+             
             />
             <TextField
               margin="normal"
@@ -123,6 +132,8 @@ function adminEditUser() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e)=>dispatch(setEditPhone(e.target.value))}
+              
+            
             />
             <TextField
               margin="normal"
@@ -134,7 +145,7 @@ function adminEditUser() {
               autoComplete="id"
               defaultValue={body.editUser._id}
               autoFocus
-              sx={{ width: "60%" }}
+              sx={{ width: "60%" ,visibility:'hidden'}}
             
             />
 

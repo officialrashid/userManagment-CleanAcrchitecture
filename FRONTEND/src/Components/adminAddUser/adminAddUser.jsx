@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -14,18 +14,66 @@ import {adminAddUserName,adminAddUserEmail,adminAddUserPhone,
   import axios from "../../axios/axios";
   import {useNavigate} from 'react-router-dom'
 function adminAddUser() {
+  const [errors, setErrors] = useState({}); 
   const navigate = useNavigate()
   const body = useSelector((state) => state.adminAddUser)
   const dispatch = useDispatch()
  const handleAdminAddUser = (e) =>{
      
   e.preventDefault()
-  console.log('admin add user calling');
-     axios.post('/api/v1/admin/adminAddUser',body).then((responsse)=>{
-         
-        navigate('/adminHome')
-     })
+  if(validateForm()){
+    console.log('admin add user calling');
+    axios.post('/api/v1/admin/adminAddUser',body).then((responsse)=>{
+        
+       navigate('/adminHome')
+    })
+  }
+
  }
+ const validateForm = () => {
+  let isValid = true;
+  const newErrors = {};
+
+  if (!body.name.trim()) {
+    newErrors.name = "Name is required";
+    isValid = false;
+  }
+
+  if (!body.email.trim()) {
+    newErrors.email = "Email is required";
+    isValid = false;
+  } else if (!/\S+@\S+\.\S+/.test(body.email)) {
+    newErrors.email = "Email is invalid";
+    isValid = false;
+  }
+
+  if (!body.password.trim()) {
+    newErrors.password = "Password is required";
+    isValid = false;
+  } else if (body.password.length < 6) {
+    newErrors.password = "Password should be at least 6 characters long";
+    isValid = false;
+  }
+
+  if (!body.confirmPassword.trim()) {
+    newErrors.confirmPassword = "Confirm Password is required";
+    isValid = false;
+  } else if (body.confirmPassword !== body.password) {
+    newErrors.confirmPassword = "Passwords do not match";
+    isValid = false;
+  }
+
+  if (!body.phone.trim()) {
+    newErrors.phone = "Phone is required";
+    isValid = false;
+  } else if (!/^\d{10}$/.test(body.phone)) {
+    newErrors.phone = "Phone is invalid";
+    isValid = false;
+  }
+
+  setErrors(newErrors);
+  return isValid;
+};
   return (
     <div>
          <Container component="main" maxWidth="md">
@@ -92,6 +140,8 @@ function adminAddUser() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e)=>dispatch(adminAddUserName(e.target.value))}
+              error={!!errors.name}
+              helperText={errors.name}
             />
             <TextField
               margin="normal"
@@ -104,6 +154,8 @@ function adminAddUser() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e)=>dispatch(adminAddUserEmail(e.target.value))}
+              error={!!errors.email}
+              helperText={errors.email}
             />
             <TextField
               margin="normal"
@@ -116,6 +168,8 @@ function adminAddUser() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(adminAddUserPhone(e.target.value))}
+              error={!!errors.phone}
+              helperText={errors.phone}
             />
 
             <TextField
@@ -129,6 +183,8 @@ function adminAddUser() {
               autoComplete="current-password"
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(adminAddUserPassword(e.target.value))}
+              error={!!errors.password}
+              helperText={errors.password}
             />
             <TextField
               margin="normal"
@@ -141,6 +197,8 @@ function adminAddUser() {
               autoComplete="current-password"
               sx={{ width: "60%" }}
               onChange={(e)=>dispatch(adminAddUserConfirmPassword(e.target.value))}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
             />
             <Stack direction="row" spacing={2}>
               <Button type="submit" variant="contained" fullWidth  sx={{ mt: 5, mb: 2, height: 60, width: "60%", backgroundColor: '#131392' }}>

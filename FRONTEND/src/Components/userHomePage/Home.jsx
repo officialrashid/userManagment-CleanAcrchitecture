@@ -23,7 +23,7 @@ function Home() {
    const body = useSelector((state)=>state.register)
    const [user,setUsers] = useState([])
    useEffect(()=>{
-     console.log(body);
+     console.log(body,";;;;;;;;;;;;;");
      setUsers(body)
     
    },[])

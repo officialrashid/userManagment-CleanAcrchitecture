@@ -62,10 +62,13 @@ const authController = (adminAuthRepositoryInt,adminAuthRepositoryImp,adminSeriv
         console.log(req.body,"'''''''");
         const {_id,name,email,phone} = req.body
         updateUserDetails(_id,name,email,phone,dbRepository,authService).then((response)=>{
+       
             res.json(response)
-        }).catch(()=>{
-
-        })
+        
+            
+        }) .catch(() => {
+         
+        });
       }
       const adminAddUser = (req,res) =>{
 
