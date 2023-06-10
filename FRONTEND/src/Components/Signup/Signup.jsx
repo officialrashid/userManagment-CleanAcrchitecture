@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -10,27 +10,84 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import axios from "../../axios/axios";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   setName,
   setEmail,
   setPhone,
   setPassword,
   setConfirmPassword,
+  isUser,
+  addUserInfo,
 } from "../../redux-toolkit/registerReducers";
 import { useNavigate } from "react-router-dom";
 export default function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const body = useSelector((state) => state.register);
+  const [errors, setErrors] = useState({}); 
   console.log(body.name, ";;;;;;;;;;;;;;", body, "body coming");
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("handleSubmit called"); // Add this line
-    axios.post("/api/v1/user/signup", body).then((response) => {
-      console.log(response, "response in frontend");
+    if (validateForm()){
+      console.log("handleSubmit called"); // Add this line
+      axios.post("/api/v1/user/signup", body).then((response) => {
+        console.log(response, "response in frontend");
+        if (response?.data?.status === true) {
+          localStorage.setItem('userAccessToken', response?.data?.accessToken)
+          localStorage.setItem('userRefreshToken', response?.data?.refreshToken)
+          dispatch(isUser(response?.data?.accessToken))
+          dispatch(addUserInfo(response?.data?.userInfo))
+          navigate("/home");
+        }
+        
+      });
+    }
 
-      navigate("/home");
-    });
+  };
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+  
+    if (!body.name.trim()) {
+      newErrors.name = "Name is required";
+      isValid = false;
+    }
+  
+    if (!body.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(body.email)) {
+      newErrors.email = "Email is invalid";
+      isValid = false;
+    }
+  
+    if (!body.password.trim()) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    } else if (body.password.length < 6) {
+      newErrors.password = "Password should be at least 6 characters long";
+      isValid = false;
+    }
+  
+    if (!body.confirmPassword.trim()) {
+      newErrors.confirmPassword = "Confirm Password is required";
+      isValid = false;
+    } else if (body.confirmPassword !== body.password) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
+  
+    if (!body.phone.trim()) {
+      newErrors.phone = "Phone is required";
+      isValid = false;
+    } else if (!/^\d{10}$/.test(body.phone)) {
+      newErrors.phone = "Phone is invalid";
+      isValid = false;
+    }
+  
+    setErrors(newErrors);
+    return isValid;
   };
   return (
     <div>
@@ -38,6 +95,7 @@ export default function Signup() {
         <Box
           sx={{
             display: "flex",
+      
             flexDirection: "column",
             alignItems: "center",
             marginLeft: 10,
@@ -103,6 +161,8 @@ export default function Signup() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(setName(e.target.value))}
+              error={!!errors.name}
+              helperText={errors.name}
             />
             <TextField
               margin="normal"
@@ -115,6 +175,8 @@ export default function Signup() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(setEmail(e.target.value))}
+              error={!!errors.email}
+              helperText={errors.email}
             />
             <TextField
               margin="normal"
@@ -127,6 +189,9 @@ export default function Signup() {
               autoFocus
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(setPhone(e.target.value))}
+              error={!!errors.phone}
+              helperText={errors.phone}
+              
             />
 
             <TextField
@@ -140,6 +205,8 @@ export default function Signup() {
               autoComplete="current-password"
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(setPassword(e.target.value))}
+              error={!!errors.password}
+              helperText={errors.password}
             />
             <TextField
               margin="normal"
@@ -152,6 +219,9 @@ export default function Signup() {
               autoComplete="current-password"
               sx={{ width: "60%" }}
               onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
+              
             />
             <Stack direction="row" spacing={2}>
               <Button

@@ -5,32 +5,61 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Divider from '@mui/material/Divider';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoginEmail, setLoginPassword } from '../../redux-toolkit/loginReducers';
-import { useNavigate } from 'react-router-dom';
+import Divider from "@mui/material/Divider";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoginEmail, setLoginPassword } from "../../redux-toolkit/loginReducers";
+import { useNavigate } from "react-router-dom";
 import axios from "../../axios/axios";
-
+import React, { useState } from "react";
 
 export default function Login() {
-  const body = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState({}); // Move this line inside the component
+
+  const body = useSelector((state) => state.login);
+
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    console.log("login handle called");
-    axios.post("/api/v1/user/login", body).then((response) => {
-        console.log(response.data,"9999999999");
-        if(response.data==true){
-            navigate('/home')
-        }else{
-            navigate('/login')
+    if (validateForm()) {
+      console.log("login handle called");
+      axios.post("/api/v1/user/login", body).then((response) => {
+        console.log(response.data, "9999999999");
+        if (response.data == true) {
+          navigate("/home");
+        } else {
+          navigate("/login");
         }
-      
-      
-    });
+      });
+    }
   };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!body.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(body.email)) {
+      newErrors.email = "Email is invalid";
+      isValid = false;
+    }
+
+    if (!body.password.trim()) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    } else if (body.password.length < 6) {
+      newErrors.password = "Password should be at least 6 characters long";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+
     return (
         <Container component="main" maxWidth="md"   >
             <Box
@@ -73,6 +102,8 @@ export default function Login() {
                         
                         sx={{ width: "70%" }}
                         onChange={(e) => dispatch(setLoginEmail(e.target.value))}
+                        error={!!errors.email}
+                        helperText={errors.email}
                     />
 
                     <TextField
@@ -87,6 +118,8 @@ export default function Login() {
                      
                         sx={{ width: "70%" }}
                         onChange={(e) => dispatch(setLoginPassword(e.target.value)) }
+                        error={!!errors.password}
+                        helperText={errors.password}
                     />
 
                     <Button type="submit" fullWidth variant="contained" sx={{ mt: 5, mb: 2, height: 60, width: "70%", backgroundColor: '#131392' }}  >

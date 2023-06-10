@@ -9,12 +9,12 @@ const registerSlice = createSlice({
     phone: '',
     password: '',
     confirmPassword: '',
+    isUser: '',
+    userInfo: ''
   },
   reducers: {
     setName: (state, action) => {
-        console.log(action.payload,"PPPPPPPPPPPPPP");
       state.name = action.payload;
-      console.log(state.name,"bdssssssssssssss");
     },
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -28,6 +28,14 @@ const registerSlice = createSlice({
     setConfirmPassword: (state, action) => {
       state.confirmPassword = action.payload;
     },
+    isUser: (state, action) => {
+      console.log(action.payload, "lllllllllllaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      state.isUser = action.payload;
+    },
+    addUserInfo: (state, action) => {
+      console.log(action.payload, "[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+      state.userInfo = action.payload;
+    }
   },
 });
 
@@ -37,6 +45,8 @@ export const {
   setPhone,
   setPassword,
   setConfirmPassword,
+  isUser,
+  addUserInfo
 } = registerSlice.actions;
 
 export default registerSlice.reducer;

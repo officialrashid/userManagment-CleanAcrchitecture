@@ -10,6 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import {useNavigate} from 'react-router-dom'
 
 function profile() {
+  const navigate = useNavigate()
   return (
     <Box marginLeft={1} sx={{ width: 300, height: 500, borderRadius: 2,marginTop:5 }}>
     <Box  sx={{borderRadius:2,boxShadow:6,width:300,height:'auto',zIndex:1,}}>
@@ -26,7 +27,7 @@ function profile() {
         Rashi@gmail.com
         </Typography>
         <Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }} onClick={()=>
-          navigate('')
+          navigate('/addProfile')
         } >Complete profile</Button>
         <Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }}   >Signup</Button>
        

@@ -11,9 +11,17 @@ const register = async (name, email, phone, password, repositories, authService)
          console.log(userDetails,"usedetails is comng");
          const createUser = await repositories.createUser(userDetails)
          console.log(createUser)
-         return{
-            createUser
-         }
+         const registeredUser = {
+
+            userId: createUser?._id,
+            name: createUser?.name,
+            email: createUser?.email
+        }
+         const accessToken = await authService.createAccessToken(registeredUser)
+         const refreshToken = await authService.createRefreshToken(registeredUser)
+         console.log(accessToken,"lllllllllllllll");
+         console.log(refreshToken,"jjjjjjjjjjjjj");
+         return ({ status: true, accessToken: accessToken, refreshToken: refreshToken,userInfo:registeredUser,createUser });
       }else{
          return {message:'email already exists'}
       }

@@ -12,12 +12,22 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { useSelector } from 'react-redux';
+import {useEffect} from 'react'
+import { useState } from 'react';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 function Home() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+   const body = useSelector((state)=>state.register)
+   const [user,setUsers] = useState([])
+   useEffect(()=>{
+     console.log(body);
+     setUsers(body)
+    
+   },[])
+   console.log(user,";;;;;;;;;;;;;;");
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
