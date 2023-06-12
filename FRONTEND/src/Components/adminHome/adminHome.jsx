@@ -98,7 +98,9 @@ function AdminHome() {
   };
 
   const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(search.toLowerCase())
+    user.name.toLowerCase().includes(search.toLowerCase()) ||
+    user.email.toLowerCase().includes(search.toLowerCase()) ||
+    user.phone.toLowerCase().includes(search.toLowerCase())
   );
 
   const deleteUser = userId => {
@@ -114,13 +116,13 @@ function AdminHome() {
     <div>
       <Search>
         <SearchIconWrapper>
-          <SearchIcon />
+          <SearchIcon sx={{marginTop:4, marginLeft:4}} />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder="Search…"
+          placeholder="Search..."
           inputProps={{ 'aria-label': 'search' }}
-          value={search}
           onChange={handleSearch}
+          sx={{ marginTop: 4,borderStyle:'solid',marginLeft:4 }}
         />
       </Search>
       <TableContainer component={Paper} sx={{ width: 1200, marginTop: 6, marginLeft: 4 }}>
@@ -143,10 +145,7 @@ function AdminHome() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.filter((value)=>{
-              
-            })}
-            {users.map(user => (
+            {filteredUsers.map(user => (
               <StyledTableRow key={user._id}>
                 <StyledTableCell component="th" scope="row">
                   {user.name}
