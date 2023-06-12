@@ -20,14 +20,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 function Home() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-   const body = useSelector((state)=>state.register)
-   const [user,setUsers] = useState([])
-   useEffect(()=>{
-     console.log(body,";;;;;;;;;;;;;");
-     setUsers(body)
-    
-   },[])
-   console.log(user,";;;;;;;;;;;;;;");
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -135,7 +128,7 @@ function Home() {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+             
             </IconButton>
           </Tooltip>
           <Menu

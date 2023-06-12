@@ -13,7 +13,7 @@ const register = async (name, email, phone, password, repositories, authService)
          console.log(createUser)
          const registeredUser = {
 
-            userId: createUser?._id,
+            _id: createUser?._id,
             name: createUser?.name,
             email: createUser?.email
         }

@@ -18,7 +18,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin" element={<AdminSignupPage />} />
         <Route path="/adminLogin" element={<AdminLoginPage />} />
-        <Route path="/home" element={<React.Fragment><Home /><Profile /></React.Fragment>} />
+        <Route path="/home" element={<Home />} />
         <Route path='/addProfile' element={<AdAddProfileComponent />} />
         <Route path='/adminHome' element={<AdminHomePage />} />
         <Route path='/adminEditUser' element={<AdminEditUser />} />

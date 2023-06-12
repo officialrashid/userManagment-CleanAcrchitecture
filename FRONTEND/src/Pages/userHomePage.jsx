@@ -6,6 +6,7 @@ function UserHomePage() { // Update the component name to use camel case
   return (
     <div>
       <Home />
+      <Profile />
       {/* Corrected usage of the Profile component */}
     </div>
   );

@@ -10,8 +10,9 @@ const registerSlice = createSlice({
     password: '',
     confirmPassword: '',
     isUser: '',
-    userInfo: ''
+    userInfo: {}
   },
+  
   reducers: {
     setName: (state, action) => {
       state.name = action.payload;

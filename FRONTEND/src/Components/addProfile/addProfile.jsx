@@ -1,61 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import { Stack, Avatar } from '@mui/material';
+import { Box, Stack, Avatar, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setProfileImage } from '../../redux-toolkit/userProfileReducer';
-import Button from '@mui/material/Button';
-import axios from 'axios';
+import cloudinary from 'cloudinary-core';
+import Axios from 'axios';
+import axios from '../../axios/axios';
 import { useNavigate } from 'react-router-dom';
+import { addUserInfo } from '../../redux-toolkit/registerReducers';
+
+// Create a Cloudinary instance
+const cl = cloudinary.Cloudinary.new({ cloud_name: 'dz9pszn6y' });
 
 function AddProfile() {
   const navigate = useNavigate();
   const body = useSelector((state) => state.register);
   const [image, setImage] = useState();
+  const [user, setUser] = useState([]);
+  const [prevUrl, setPrevUrl] = useState();
+
   useEffect(() => {
-    console.log(body, 'useEffect body in profile ethiii');
+    setUser(body);
   }, []);
+
   const dispatch = useDispatch();
   const profileImage = useSelector((state) => state.userProfile.profileImage);
-  const userID = useSelector((state) => state.register.userID);
-
-  const handleProfileImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      dispatch(setProfileImage(reader.result));
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
+  const userData = useSelector((state) => state.register);
 
   const handleUpdatePhoto = () => {
-    if (profileImage) {
-      const formData = new FormData();
-      formData.append('profileImage', profileImage);
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('upload_preset', 'ypnvfoyt');
 
-      axios
-        .post(`/api/v1/user/${userID}/updateProfileImage`, formData) // Replace with your API endpoint URL
-        .then((response) => {
-          // Handle success if needed
-          navigate('/home'); // Navigate to the home page after successful update
-        })
-        .catch((error) => {
-          // Handle error if needed
-        });
-    }
+    Axios.post('https://api.cloudinary.com/v1_1/dz9pszn6y/image/upload', formData)
+      .then((response) => {
+        const url = response.data.secure_url;
+        if (url === prevUrl) {
+          console.log('Image already exists');
+          return false;
+        } else {
+          const newData = {
+            url: response.data.secure_url,
+            userId: userData.userInfo._id,
+          };
+          setPrevUrl(url);
+          axios
+            .post('/api/v1/user/updateProfile', newData)
+            .then((response) => {
+              dispatch(addUserInfo(response.data.response));
+              navigate('/home');
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <Box marginLeft={45} sx={{ width: 300, height: 500, borderRadius: 2, marginTop: 15 }}>
       <Box sx={{ borderRadius: 2, boxShadow: 6, width: 500, height: 'auto', zIndex: 1 }}>
         <Stack spacing={2} alignItems="center">
-          {profileImage ? (
+          {image ? (
             <Avatar
               alt=""
-              src={profileImage}
+              src={URL.createObjectURL(image)}
               sx={{ width: 80, height: 80, marginTop: -3, mx: 'auto' }}
             />
           ) : (
@@ -67,7 +78,12 @@ function AddProfile() {
           )}
 
           <label htmlFor="upload-file" style={{ marginLeft: '120px', marginTop: '50px' }}>
-            <input type="file" id="upload-file" style={{ fontSize: '16px' }} onChange={handleProfileImageChange} />
+            <input
+              type="file"
+              id="upload-file"
+              style={{ fontSize: '16px' }}
+              onChange={(e) => setImage(e.target.files[0])}
+            />
             <Button variant="contained" sx={{ marginTop: 10, marginLeft: 6 }} onClick={handleUpdatePhoto}>
               Update Photo
             </Button>

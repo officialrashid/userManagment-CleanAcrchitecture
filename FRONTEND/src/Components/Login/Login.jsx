@@ -8,6 +8,7 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginEmail, setLoginPassword } from "../../redux-toolkit/loginReducers";
+import { isUser,addUserInfo } from "../../redux-toolkit/registerReducers";
 import { useNavigate } from "react-router-dom";
 import axios from "../../axios/axios";
 import React, { useState } from "react";
@@ -27,7 +28,12 @@ export default function Login() {
       console.log("login handle called");
       axios.post("/api/v1/user/login", body).then((response) => {
         console.log(response.data, "9999999999");
-        if (response.data == true) {
+        if (response.data.status==true) {
+          
+          localStorage.setItem('userAccessToken', response?.data?.accessToken)
+          localStorage.setItem('userRefreshToken', response?.data?.refreshToken)
+          dispatch(isUser(response?.data?.accessToken))
+          dispatch(addUserInfo(response?.data?.userInfo))
             toast.success('Login successful!');
           navigate("/home");
         } else {

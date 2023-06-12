@@ -12,6 +12,9 @@ const authRouter=(express) =>{
     
    router.route('/signup').post(controller.createuser)
    router.route('/login').post(controller.loginUser)
+   router.route('/updateProfile').post(controller.updateProfile)
+   router.route('/getUser/:id').get(controller.getUser)
+   router.route
     return router;
 }
 export default authRouter

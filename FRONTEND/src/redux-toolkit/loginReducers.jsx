@@ -5,6 +5,8 @@ const loginSlice = createSlice({
     initialState: {
       email: '',
       password: '',
+      isUser:'',
+      userInfo: ''
     },
     reducers: {
       setLoginEmail: (state, action) => {
@@ -13,6 +15,14 @@ const loginSlice = createSlice({
       setLoginPassword: (state, action) => {
         state.password = action.payload;
       },
+      isUser: (state, action) => {
+        console.log(action.payload, "lllllllllllaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        state.isUser = action.payload;
+      },
+      addUserInfo: (state, action) => {
+        console.log(action.payload, "[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+        state.userInfo = action.payload;
+      }
     },
   });
   

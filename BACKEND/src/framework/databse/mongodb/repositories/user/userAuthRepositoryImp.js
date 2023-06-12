@@ -15,10 +15,22 @@ const userAuthRepositoryImp=()=>{
         })
       return users.save()
     }
-   
+   const uploadImage = async(url,userId)=>{
+    const user = await userdata.findByIdAndUpdate(userId,{image:url},{new:true})
+    console.log(user);
+    return user;
+   }
+   const getUsers = async(userId) =>{
+    
+    const getUser = await userdata.findById(userId);
+       console.log(getUser,"get user i impl");
+       return getUser;
+   }
     return{
         userExist,
-        createUser
+        createUser,
+        uploadImage,
+        getUsers
     }
 }
 export default userAuthRepositoryImp;
