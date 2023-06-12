@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import SignupPage from './Pages/SignupPage';
 import LoginPage from './Pages/LoginPage';
 import AdminSignupPage from './adminPages/adminSignupPage';
@@ -22,22 +22,36 @@ function App() {
     console.log(user, ":::::::::::::::::::::;pppppppppppppppppp");
   }, [dispatch, user]);
 
+  const jwtToken = localStorage.getItem('userAccessToken');
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (!user) {
+        // Clear the JWT token from local storage when logging out
+        localStorage.removeItem('userAccessToken');
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [user]);
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin" element={<AdminLoginPage />} />
-        {/* <Route path="/adminLogin" element={<AdminLoginPage />} /> */}
-        {user ? (
-          <Route path="/home" element={<Home />} />
+        {jwtToken ? (
+          <>
+            <Route path="/home" element={<Home />} />
+            <Route path="/addProfile" element={<AdAddProfileComponent />} />
+          </>
         ) : (
-          <Route path="/home" element={<LoginPage />} />
-        )}
-        {user ? (
-          <Route path="/addProfile" element={<AdAddProfileComponent />} />
-        ) : (
-          <Route path="/addProfile" element={<LoginPage />} />
+          <Navigate to="/login" replace />
         )}
         <Route path="/adminHome" element={<AdminHomePage />} />
         <Route path="/adminEditUser" element={<AdminEditUser />} />

@@ -28,7 +28,7 @@ function adminEditUser() {
       };
 
       axios.put('/api/v1/admin/adminEditUser', updatedUser).then((response) => {
-        toast.success('user Edit successful');
+        toast.success('user Edit successful!');
           navigate('/adminHome');
         
       

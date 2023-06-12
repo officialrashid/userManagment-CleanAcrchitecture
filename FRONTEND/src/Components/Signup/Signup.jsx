@@ -134,16 +134,7 @@ export default function Signup() {
           </Typography>
 
           <Typography
-            variant="h1"
-            component="h"
-            sx={{
-              fontSize: 30,
-              fontWeight: 400,
-              color: "#05264e",
-              alignItems: "center",
-              marginTop: 2,
-              marginRight: 10,
-            }}
+            component="h1" variant="h5" sx={{ fontSize: 24, fontWeight: 1000,marginRight:10 }}
           >
             Start for free Today
           </Typography>
