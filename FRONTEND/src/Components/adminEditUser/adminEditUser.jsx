@@ -9,7 +9,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setEditName, setEditEmail, setEditPhone } from "../../redux-toolkit/adminEditSubmitReducer";
 import { useNavigate } from 'react-router-dom';
 import axios from "../../axios/axios";
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function adminEditUser() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ function adminEditUser() {
       };
 
       axios.put('/api/v1/admin/adminEditUser', updatedUser).then((response) => {
-        
+        toast.success('user Edit successful');
           navigate('/adminHome');
         
       

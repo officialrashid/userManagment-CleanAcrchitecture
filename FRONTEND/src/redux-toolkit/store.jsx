@@ -10,7 +10,8 @@ import adminEditUserReducer from './adminEditUserReducer';
 import adminEditSubmitReducer from './adminEditSubmitReducer';
 import adminAddUserReducer from './adminAddUserReducer';
 import userProfileReducer from './userProfileReducer';
-
+import logoutReducer from './logoutReducer';
+import adminLogoutReducer from './adminLogoutReducer';
 const persistConfig = {
   key: 'root',
   storage,
@@ -27,6 +28,8 @@ const persistedReducer = persistReducer(
     adminEditSubmit: adminEditSubmitReducer,
     adminAddUser: adminAddUserReducer,
     userProfile: userProfileReducer,
+    logout:logoutReducer,
+    adminLogout:adminLogoutReducer
   })
 );
 

@@ -27,11 +27,11 @@ const authController = (adminAuthRepositoryInt,adminAuthRepositoryImp,adminSeriv
 
         const {email,password} = req.body
         adminSignIn(email,password,dbRepository,authService).then((response)=>{
-            console.log(response.status,";;;;;;;;ooo");
+            console.log(response,";;;;;;;;ooo");
             if(response.status==true){
-                res.json(response.status)
+                res.json(response)
              }else{
-                res.json(response.status)
+                res.json(response)
              }
         }).catch(()=>{
 
@@ -62,7 +62,7 @@ const authController = (adminAuthRepositoryInt,adminAuthRepositoryImp,adminSeriv
         console.log(req.body,"'''''''");
         const {_id,name,email,phone} = req.body
         updateUserDetails(_id,name,email,phone,dbRepository,authService).then((response)=>{
-       
+           console.log(response,"kkkkkkkkkkkk000000000000000000000000");
             res.json(response)
         
             
@@ -75,7 +75,7 @@ const authController = (adminAuthRepositoryInt,adminAuthRepositoryImp,adminSeriv
         const {name,email,phone,password} = req.body
 
         adminAddUsers(name,email,phone,password,dbRepository,authService).then((response)=>{
-            
+            console.log(response,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           res.json(response)
         }).catch((error)=>{
           console.log(error);

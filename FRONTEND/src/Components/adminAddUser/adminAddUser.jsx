@@ -13,6 +13,12 @@ import {adminAddUserName,adminAddUserEmail,adminAddUserPhone,
   adminAddUserPassword,adminAddUserConfirmPassword} from '../../redux-toolkit/adminAddUserReducer'
   import axios from "../../axios/axios";
   import {useNavigate} from 'react-router-dom'
+  import {
+    isUser,
+    addUserInfo,
+  } from "../../redux-toolkit/registerReducers";
+  import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function adminAddUser() {
   const [errors, setErrors] = useState({}); 
   const navigate = useNavigate()
@@ -23,9 +29,20 @@ function adminAddUser() {
   e.preventDefault()
   if(validateForm()){
     console.log('admin add user calling');
-    axios.post('/api/v1/admin/adminAddUser',body).then((responsse)=>{
+    axios.post('/api/v1/admin/adminAddUser',body).then((response)=>{
+        console.log(response,"admin add dataaaaaaa");
+        if (response?.data?.status === true) {
+          localStorage.setItem('userAccessToken', response?.data?.accessToken)
+          localStorage.setItem('userRefreshToken', response?.data?.refreshToken)
+          dispatch(isUser(response?.data?.accessToken))
+          dispatch(addUserInfo(response?.data?.userInfo))
+          toast.success('Registration successful!');
+          navigate('/adminHome')
+        }else if(response?.data?.message === 'Email already exists'){
+          toast.warn('email already exists!please try another email')
+        } 
         
-       navigate('/adminHome')
+      
     })
   }
 

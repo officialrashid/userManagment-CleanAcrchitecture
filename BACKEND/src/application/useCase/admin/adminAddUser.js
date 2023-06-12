@@ -1,22 +1,37 @@
 import userdata from "../../../entities/user.js";
-const adminAddUsers = async (name,email,phone,password,repositories,authService) =>{
-        
-    await repositories.userExist(email).then(async(user)=>{
-        if (!user) {
-            const bycriptPassword = await authService.bycriptPassword(password)
 
-            console.log(bycriptPassword,"bcryp Add user is cminh");
+const adminAddUsers = async (name, email, phone, password, repositories, authService) => {
+  try {
+    const user = await repositories.userExist(email);
 
-            const userDetails = userdata(name, email, phone, bycriptPassword)
-            console.log(userDetails,"usedetails add user is comng");
-            const adminCreateUser = await repositories.adminCreateUser(userDetails)
-            console.log(adminCreateUser,"vannttankda")
-            return{
-                adminCreateUser
-            }
-         }else{
-            return {message:'email already exists'}
-         }
-    })
-} 
-export default adminAddUsers
+    if (!user) {
+      const bycriptPassword = await authService.bycriptPassword(password);
+      const userDetails = userdata(name, email, phone, bycriptPassword);
+      const adminCreateUser = await repositories.adminCreateUser(userDetails);
+
+      const registeredUser = {
+        _id: adminCreateUser?._id,
+        name: adminCreateUser?.name,
+        email: adminCreateUser?.email,
+      };
+
+      const accessToken = await authService.createAccessToken(registeredUser);
+      const refreshToken = await authService.createRefreshToken(registeredUser);
+
+      return {
+        status: true,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        userInfo: registeredUser,
+        adminCreateUser: adminCreateUser,
+      };
+    } else {
+      return { message: 'Email already exists' };
+    }
+  } catch (error) {
+    console.error(error);
+    return { message: 'An error occurred while adding the user' };
+  }
+};
+
+export default adminAddUsers;

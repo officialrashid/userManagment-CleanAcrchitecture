@@ -5,6 +5,8 @@ const adminLoginSlice = createSlice({
     initialState: {
       email: '',
       password: '',
+      isAdmin: '',
+      AdminInfo: {}
     },
     reducers: {
       setLoginEmail: (state, action) => {
@@ -13,10 +15,18 @@ const adminLoginSlice = createSlice({
       setLoginPassword: (state, action) => {
         state.password = action.payload;
       },
+      isAdmin: (state, action) => {
+        console.log(action.payload, "lllllllllllaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        state.isUser = action.payload;
+      },
+      addAdminInfo: (state, action) => {
+        console.log(action.payload, "[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+        state.userInfo = action.payload;
+      }
     },
   });
   
-  export const { setLoginEmail, setLoginPassword } = adminLoginSlice.actions;
+  export const { setLoginEmail, setLoginPassword,isAdmin,addAdminInfo } = adminLoginSlice.actions;
 
   
   export default adminLoginSlice.reducer;

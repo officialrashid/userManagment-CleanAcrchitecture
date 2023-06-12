@@ -15,12 +15,14 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useSelector } from 'react-redux';
 import {useEffect} from 'react'
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 function Home() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -54,6 +56,7 @@ function Home() {
             color: 'inherit',
             textDecoration: 'none',
           }}
+          
         >
           LOGO
         </Typography>

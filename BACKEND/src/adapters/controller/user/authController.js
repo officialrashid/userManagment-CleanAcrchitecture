@@ -7,19 +7,19 @@ const authcontroller = (userAuthRepositoryInt, userAuthRepositoryImp, userSerivi
     const dbRepository = userAuthRepositoryInt(userAuthRepositoryImp())
     const authService = userSeriviceInt(userServiceImp())
  
-    const createuser = (req, res) => {
-       console.log("controller keriiiiiiiiiiiiii",req.body);
-       const { name, email, phone, password} = req.body
- 
-       register(name, email, phone, password, dbRepository, authService).then((response) => {
-              
-         console.log(response,"response coming");
-         res.json(response)
-      
-       }).catch(() => {
- 
-       })
-    } 
+      const createuser = (req, res) => {
+        console.log("controller keriiiiiiiiiiiiii",req.body);
+        const { name, email, phone, password} = req.body
+  
+        register(name, email, phone, password, dbRepository, authService).then((response) => {
+                
+          console.log(response,"response coming");
+          res.json(response)
+        
+        }).catch(() => {
+  
+        })
+      } 
  const loginUser = ( req,res) =>{
         
    const {email,password} = req.body

@@ -8,9 +8,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Divider from '@mui/material/Divider';
 import {useDispatch,useSelector} from 'react-redux'
-import { setLoginEmail, setLoginPassword } from '../../redux-toolkit/adminLoginReducer';
+import { setLoginEmail, setLoginPassword,isAdmin,addAdminInfo } from '../../redux-toolkit/adminLoginReducer';
 import axios from "../../axios/axios"
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function AdminLogin() {
     const navigate = useNavigate();
   const dispatch = useDispatch()
@@ -19,11 +22,17 @@ function AdminLogin() {
     console.log("handle admin login caled",body,"admin body coming");
     e.preventDefault();
     axios.post('/api/v1/admin/adminLogin',body).then((response)=>{
-           
-        if(response.data==true){
+           console.log(response.data.accessToken,"llllllladminnnnnnnnnnnn");
+        if(response.data.status==true){
+            localStorage.setItem('adminAccessToken', response?.data?.accessToken)
+            localStorage.setItem('adminRefreshToken', response?.data?.refreshToken)
+            dispatch(isAdmin(response?.data?.accessToken))
+            dispatch(addAdminInfo(response?.data?.userInfo))
+              toast.success('Login successful!');
             navigate('/adminHome')
         }else{
-            navigate('/adminLogin')
+            toast.error('Incorrect Email or password check it!');
+            navigate('/admin')
         }
     })
   }

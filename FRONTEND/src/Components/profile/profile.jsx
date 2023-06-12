@@ -4,12 +4,17 @@ import Avatar from '@mui/material/Avatar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from '../../axios/axios';
-
+import { useDispatch } from 'react-redux';
+import {setLogout} from '../../redux-toolkit/logoutReducer'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Profile() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const location = useLocation(); // Access the location object
   const userDatas = useSelector((state) => state.register);
   const [user, setUser] = useState(null);
-
+  
   useEffect(() => {
     console.log(userDatas.userInfo,"::::::::::::::::::::::::::::;******************");
     const userId = userDatas.userInfo._id;
@@ -28,7 +33,7 @@ function Profile() {
     }
   }, [userDatas.userInfo._id]); // Update the dependency array
 
-  const navigate = useNavigate();
+ 
 
   if (!user) {
     return null; // Render loading state or return a spinner
@@ -72,6 +77,11 @@ function Profile() {
               marginLeft: 6,
               marginTop: 3,
               backgroundColor: '#3C6FF5',
+            }}
+            onClick={() => {
+              dispatch(setLogout());
+              navigate('/login');
+              toast.success('Logout successful!');
             }}
           >
             Logout

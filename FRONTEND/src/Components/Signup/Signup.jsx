@@ -42,7 +42,9 @@ export default function Signup() {
           dispatch(addUserInfo(response?.data?.userInfo))
           toast.success('Registration successful!');
           navigate("/home");
-        }
+        }else if(response?.data?.message === 'email already exists'){
+          toast.warn('email already exists!please try another email')
+        } 
         
       });
     }

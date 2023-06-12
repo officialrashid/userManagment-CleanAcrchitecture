@@ -16,7 +16,9 @@ import { useDispatch } from 'react-redux';
 import { setEditUser } from '../../redux-toolkit/adminEditUserReducer';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -104,13 +106,31 @@ function AdminHome() {
   );
 
   const deleteUser = userId => {
-    axios
-      .delete('/api/v1/admin/deleteUser', { data: { userId: userId } })
-      .then(response => {
-        console.log(response.data.response);
-        setUsers(users.filter(user => user._id !== userId));
-      });
+    Swal.fire({
+      title: 'Are you sure you want to delete this user?',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      }
+    }).then(result => {
+      if (result.isConfirmed) {
+        setTimeout(() => {
+          axios
+            .delete('/api/v1/admin/deleteUser', { data: { userId: userId } })
+            .then(response => {
+              console.log(response.data.response);
+              toast.success('Delete user successful!');
+              setUsers(users.filter(user => user._id !== userId));
+            });
+        }, 1000); // Add the desired delay in milliseconds (e.g., 1000 for 1 second)
+      }
+    });
   };
+  
 
   return (
     <div>
@@ -200,5 +220,5 @@ function AdminHome() {
     </div>
   );
 }
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 export default AdminHome;
