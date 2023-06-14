@@ -1,61 +1,112 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import SignupPage from './Pages/SignupPage';
-import LoginPage from './Pages/LoginPage';
-import AdminSignupPage from './adminPages/adminSignupPage';
-import AdminLoginPage from './adminPages/adminLoginPage';
-import Home from './Pages/userHomePage';
-import Profile from './Components/profile/profile';
-import AdAddProfileComponent from './Pages/addProfile';
-import AdminHomePage from './adminPages/adminHomePage';
-import AdminEditUser from './adminPages/EditUserPage';
-import AdminAddUser from './adminPages/adminAddUser';
-import { useSelector, useDispatch } from 'react-redux';
-import { isUser } from './redux-toolkit/registerReducers';
-
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import SignupPage from "./Pages/SignupPage";
+import LoginPage from "./Pages/LoginPage";
+import AdminSignupPage from "./adminPages/adminSignupPage";
+import AdminLoginPage from "./adminPages/adminLoginPage";
+import Home from "./Pages/userHomePage";
+import Profile from "./Components/profile/profile";
+import AdAddProfileComponent from "./Pages/addProfile";
+import AdminHomePage from "./adminPages/adminHomePage";
+import AdminEditUser from "./adminPages/EditUserPage";
+import AdminAddUser from "./adminPages/adminAddUser";
+import { useSelector, useDispatch } from "react-redux";
+import { isUser } from "./redux-toolkit/registerReducers";
+import {isAdmin} from "./redux-toolkit/adminLoginReducer"
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.register.isUser);
+  const admin = useSelector((state)=>state.adminLogin.isAdmin)
+  const [addjwtToken, setJwtToken] = useState("");
+  const [addAdminjwtToken, setAdminJwtToken] = useState("");
 
   useEffect(() => {
     dispatch(isUser(user));
-    console.log(user, ":::::::::::::::::::::;pppppppppppppppppp");
-  }, [dispatch, user]);
-
-  const jwtToken = localStorage.getItem('userAccessToken');
+    dispatch(isAdmin(admin))
+    const jwtToken = localStorage.getItem("userAccessToken");
+    const adminjwtToken = localStorage.getItem("adminAccessToken");
+    setJwtToken(jwtToken);
+    setAdminJwtToken(adminjwtToken);
+  }, [dispatch, user,admin]);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (!user) {
-        // Clear the JWT token from local storage when logging out
-        localStorage.removeItem('userAccessToken');
+        localStorage.removeItem("userAccessToken");
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [user]);
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<AdminLoginPage />} />
-        {jwtToken ? (
-          <>
-            <Route path="/home" element={<Home />} />
-            <Route path="/addProfile" element={<AdAddProfileComponent />} />
-          </>
-        ) : (
-          <Navigate to="/login" replace />
-        )}
-        <Route path="/adminHome" element={<AdminHomePage />} />
-        <Route path="/adminEditUser" element={<AdminEditUser />} />
-        <Route path="/adminAddUser" element={<AdminAddUser />} />
+        <Route
+          path="/"
+          element={addjwtToken ? <Navigate to="/home" /> : <SignupPage />}
+        />
+        <Route
+          path="/login"
+          element={addjwtToken ? <Navigate to="/home" /> : <LoginPage />}
+        />
+        <Route
+          path="/admin"
+          element={
+            addAdminjwtToken ? (
+              <Navigate to="/adminHome" />
+            ) : (
+              <AdminLoginPage />
+            )
+          }
+        />
+
+        <Route
+          path="/home"
+          element={!addjwtToken ? <Navigate to="/login" /> : <Home />}
+        />
+
+        <Route
+          path="/addProfile"
+          element={
+            addjwtToken ? (
+              <AdAddProfileComponent />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/adminHome"
+          element={
+            addAdminjwtToken ? <AdminHomePage /> : <Navigate to="/admin" />
+          }
+        />
+        <Route
+          path="/adminEditUser"
+          element={
+            addAdminjwtToken ? (
+              <AdminEditUser />
+            ) : (
+              <Navigate to="/admin" />
+            )
+          }
+        />
+        <Route
+          path="/adminAddUser"
+          element={
+            addAdminjwtToken ? (
+              <AdminAddUser />
+            ) : (
+              <Navigate to="/admin" />
+            )
+          }
+        />
       </Routes>
     </Router>
   );

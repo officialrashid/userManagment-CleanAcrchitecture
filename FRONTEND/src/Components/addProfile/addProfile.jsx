@@ -7,7 +7,8 @@ import Axios from 'axios';
 import axios from '../../axios/axios';
 import { useNavigate } from 'react-router-dom';
 import { addUserInfo } from '../../redux-toolkit/registerReducers';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // Create a Cloudinary instance
 const cl = cloudinary.Cloudinary.new({ cloud_name: 'dz9pszn6y' });
 
@@ -46,7 +47,9 @@ function AddProfile() {
           axios
             .post('/api/v1/user/updateProfile', newData)
             .then((response) => {
+              console.log("updated profileeeeeeeeeeeeeeeee");
               dispatch(addUserInfo(response.data.response));
+              toast.success('profile added successful!');
               navigate('/home');
             })
             .catch((error) => {

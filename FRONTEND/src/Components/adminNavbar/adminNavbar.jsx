@@ -20,6 +20,8 @@ import {setAdminLogout} from '../../redux-toolkit/adminLogoutReducer'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { isAdmin } from '../../redux-toolkit/adminLoginReducer';
+
 function AdminNavbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -46,7 +48,12 @@ function AdminNavbar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
+  const adminHandleLogout = () => {
+    dispatch(isAdmin(null));
+    dispatch(setAdminLogout());
+    navigate('/admin');
+    toast.success('Logout successful!');
+  };
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -64,12 +71,7 @@ function AdminNavbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-    <MenuItem onClick={() => {
-  handleMenuClose();
- dispatch(setAdminLogout())
- navigate('/admin');
- toast.success('Logout successful!');
-}}>
+    <MenuItem onClick={adminHandleLogout}>
   Logout
 </MenuItem>
     

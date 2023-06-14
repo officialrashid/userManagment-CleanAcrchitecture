@@ -1,43 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Stack, Typography, Button, List } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../axios/axios';
-import { useDispatch } from 'react-redux';
-import {setLogout} from '../../redux-toolkit/logoutReducer'
+import { setLogout } from '../../redux-toolkit/logoutReducer';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { isUser } from '../../redux-toolkit/registerReducers';
+
 function Profile() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const location = useLocation(); // Access the location object
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userDatas = useSelector((state) => state.register);
   const [user, setUser] = useState(null);
-  
+
   useEffect(() => {
-    console.log(userDatas.userInfo,"::::::::::::::::::::::::::::;******************");
     const userId = userDatas.userInfo._id;
-    console.log(userId,"l88888888888888888888888"); // Use location object
     if (userId) {
       axios
         .get(`/api/v1/user/getUser/${userId}`)
         .then((response) => {
           const userData = response.data.response;
-          console.log(userData, 'userdata is coming and wonderful');
           setUser(userData);
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, [userDatas.userInfo._id]); // Update the dependency array
-
- 
+  }, [userDatas.userInfo._id]);
 
   if (!user) {
-    return null; // Render loading state or return a spinner
+    return null;
   }
+
+  const handleLogout = () => {
+    dispatch(isUser(null));
+    dispatch(setLogout());
+    navigate('/login');
+    toast.success('Logout successful!');
+  };
 
   return (
     <Box marginLeft={1} sx={{ width: 300, height: 500, borderRadius: 2, marginTop: 5 }}>
@@ -78,11 +80,7 @@ function Profile() {
               marginTop: 3,
               backgroundColor: '#3C6FF5',
             }}
-            onClick={() => {
-              dispatch(setLogout());
-              navigate('/login');
-              toast.success('Logout successful!');
-            }}
+            onClick={handleLogout}
           >
             Logout
           </Button>

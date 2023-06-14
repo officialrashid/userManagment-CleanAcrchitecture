@@ -17,11 +17,11 @@ const adminLoginSlice = createSlice({
       },
       isAdmin: (state, action) => {
         console.log(action.payload, "lllllllllllaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        state.isUser = action.payload;
+        state.isAdmin = action.payload;
       },
       addAdminInfo: (state, action) => {
         console.log(action.payload, "[[[[[[[[[[[[[[[[[[[[[[[[[[[");
-        state.userInfo = action.payload;
+        state.AdminInfo = action.payload;
       }
     },
   });

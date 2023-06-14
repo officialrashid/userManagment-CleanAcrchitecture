@@ -18,7 +18,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import Swal from 'sweetalert2';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -122,6 +124,7 @@ function AdminHome() {
           axios
             .delete('/api/v1/admin/deleteUser', { data: { userId: userId } })
             .then(response => {
+            
               console.log(response.data.response);
               toast.success('Delete user successful!');
               setUsers(users.filter(user => user._id !== userId));
